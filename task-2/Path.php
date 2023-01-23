@@ -9,10 +9,7 @@ class Path {
   private static $counter = 0;
 
   public function __construct(string $path) {
-    // Check if valid Linux folder path. Not needed in the task.
-    if (preg_match('^/|//|(/[\w-]+)+$', $path)) {
       $this->path = $path;
-    }
   }
 
   public function currentPath(): string {
@@ -36,6 +33,7 @@ class Path {
       $exploded_current_path = explode('/', $this->currentPath());
       array_splice($exploded_current_path, count($exploded_current_path) - self::$counter, self::$counter);
       $this->setCurrentPath(implode('/', array_merge($exploded_current_path, $exploded_new_path)));
+      self::$counter = 0;
     }
     else {
       $this->setCurrentPath($param);
@@ -44,3 +42,7 @@ class Path {
   }
 
 }
+
+$path = new Path('/a/b/c/d');
+$path->cd('../x');
+echo $path->currentPath();
