@@ -24,13 +24,18 @@ class Path {
   }
 
   public function cd(string $param) {
+    $newParam = '';
     if (strpos($param, '../')) {
       self::$counter++;
       $newParam = substr($param, 3);
       $this->cd($newParam);
     }
     elseif (self::$counter) {
-      // @todo Remove $counter times of folder from back and glue new path.
+      // Remove $counter times of folders from back of the current path and glue new path part.
+      $exploded_new_path = explode("/", $newParam);
+      $exploded_current_path = explode('/', $this->currentPath());
+      array_splice($exploded_current_path, count($exploded_current_path) - self::$counter, self::$counter);
+      $this->setCurrentPath(implode('/', array_merge($exploded_current_path, $exploded_new_path)));
     }
     else {
       $this->setCurrentPath($param);
